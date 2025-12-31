@@ -1,17 +1,23 @@
 // .devcontainer/devcontainer.json
 {
   "name": "uv-python",
-  "service": "python",
-  "dockerComposeFile": "./compose.yml",
-  "workspaceFolder": "/home/vscode/python",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-python.python",
         "ms-python.vscode-pylance",
         "charliermarsh.ruff",
-        "ms-python.mypy-type-checker"
+        "ms-python.mypy-type-checker",
+        "GitHub.copilot-chat"
       ]
     }
-  }
+  },
+  "remoteUser": "vscode",
+  "postCreateCommand": "uv sync"
 }

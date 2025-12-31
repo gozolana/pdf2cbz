@@ -1,6 +1,6 @@
 {
     "python.useEnvironmentsExtension": false,
-    "python.defaultInterpreterPath": "/home/vscode/python/.venv/bin/python",
+    "python.defaultInterpreterPath": ".venv/bin/python",
     "python.testing.pytestEnabled": true,
     "python.testing.pytestArgs": [
         "-q"
