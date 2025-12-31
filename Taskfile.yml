@@ -1,0 +1,14 @@
+version: '3'
+
+vars:
+  SRC_DIR: "."
+  TEST_DIR: "./tests"
+
+tasks:
+  default:
+    cmds:
+      - uv run ruff check {{.SRC_DIR}}
+      - uv run ruff format --check {{.SRC_DIR}}
+      - uv run mypy {{.SRC_DIR}}
+      - uv run pytest {{.TEST_DIR}}
+    silent: false
