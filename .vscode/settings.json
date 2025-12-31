@@ -1,6 +1,9 @@
 {
     "python.useEnvironmentsExtension": false,
     "python.defaultInterpreterPath": ".venv/bin/python",
+    "python.analysis.extraPaths": [
+        "./src"
+    ],
     "python.testing.pytestEnabled": true,
     "python.testing.pytestArgs": [
         "-q"
@@ -20,5 +23,5 @@
             "source.organizeImports": "explicit"
         },
         "editor.defaultFormatter": "charliermarsh.ruff"
-    }
+    },
 }

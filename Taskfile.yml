@@ -1,20 +1,21 @@
 version: '3'
 
 vars:
-  SRC_DIR: "."
+  SRC_DIR: "./src"
   TEST_DIR: "./tests"
 
 tasks:
   default:
     cmds:
-      - uv run ruff check {{.SRC_DIR}}
-      - uv run ruff format --check {{.SRC_DIR}}
-      - uv run mypy {{.SRC_DIR}}
+      - uv run ruff check {{.SRC_DIR}} {{.TEST_DIR}}
+      - uv run ruff format --check {{.SRC_DIR}} {{.TEST_DIR}}
+      - uv run mypy --strict --ignore-missing-imports {{.SRC_DIR}} {{.TEST_DIR}}
       - uv run pytest {{.TEST_DIR}}
     silent: false
   pre-commit-checks:
     desc: "Run all pre-commit quality checks"
     cmds:
-      - uv run ruff check --force-exclude {{.SRC_DIR}}
-      - uv run mypy . --strict --ignore-missing-imports
+      - uv run ruff check --force-exclude {{.SRC_DIR}} {{.TEST_DIR}}
+      - uv run ruff format --force-exclude --check {{.SRC_DIR}} {{.TEST_DIR}}
+      - uv run mypy --strict --ignore-missing-imports {{.SRC_DIR}} {{.TEST_DIR}}
     silent: false
