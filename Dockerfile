@@ -17,7 +17,7 @@ WORKDIR /app
 COPY --from=builder --chown=app:app /app/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-COPY --chown=app:app main.py /app/main.py
+COPY --chown=app:app src /app/src
 
 # Run the application
-ENTRYPOINT ["python", "/app/main.py"]
+ENTRYPOINT ["python", "/app/src/pdf2cbz"]
