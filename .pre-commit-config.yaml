@@ -26,10 +26,11 @@ repos:
       - id: mypy
         name: mypy
         description: "Run 'mypy' for static type checking"
-        entry: uv run mypy
+        entry: uv run mypy .
         language: system
         types_or: [python, pyi]
         args: [--strict, --ignore-missing-imports]
         require_serial: true
         additional_dependencies: []
         minimum_pre_commit_version: "2.9.2"
+      
