@@ -5,8 +5,8 @@ repos:
       - id: ruff
         name: ruff
         description: "Run 'ruff' for extremely fast Python linting"
-        entry: ruff check --force-exclude
-        language: python
+        entry: uf run ruff check --force-exclude
+        language: system
         types_or: [python, pyi]
         # --fix: enable lint fixes
         args: [--fix]
@@ -17,8 +17,8 @@ repos:
       - id: ruff-format
         name: ruff-format
         description: "Run 'ruff format' for extremely fast Python formatting"
-        entry: ruff format --force-exclude
-        language: python
+        entry: uv run ruff format --force-exclude
+        language: system
         types_or: [python, pyi]
         args: []
         require_serial: true
