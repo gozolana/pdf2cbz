@@ -23,9 +23,11 @@ tasks:
     desc: "Clean up build artifacts"
     cmds:
       - rm -rf ./dist
-      - rm .coverage || true
-      - find . -name '__pycache__' -type d -exec rm -r {} +
-      - find . -name '.pytest_cache' -type d -exec rm -r {} +
-      - find . -name '.mypy_cache' -type d -exec rm -r {} +
-      - find . -name '.ruff_cache' -type d -exec rm -r {} +
+      - rm -f .coverage
+      - find . \(
+          -name '__pycache__' 
+          -o -name '.pytest_cache' 
+          -o -name '.mypy_cache' 
+          -o -name '.ruff_cache' 
+        \) -type d -exec rm -r {} +
     silent: true
