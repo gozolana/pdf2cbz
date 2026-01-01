@@ -9,11 +9,12 @@ from rich.progress import BarColumn, Progress, TextColumn
 
 app = typer.Typer(help="PDF から CBZ 形式へ変換するツール")
 
+data_path = Path("/data")
+
 
 @app.command()
 def convert(
-    pdf_path: str = typer.Argument(..., help="変換対象の PDF ファイルパス"),
-    output_dir: str = typer.Option("dist", "--output", "-o", help="出力ディレクトリ"),
+    pdf_name: str = typer.Argument(..., help="変換対象の PDF ファイルパス"),
     height_px: int | None = typer.Option(
         None,
         "--height",
@@ -29,8 +30,10 @@ def convert(
 ) -> None:
     """PDF ファイルを CBZ 形式に変換します"""
 
-    output_path = Path(output_dir)
-    output_path.mkdir(parents=True, exist_ok=True)
+    pdf_path = data_path / pdf_name
+    tmp_path = pdf_path.with_suffix("")
+    if not tmp_path.exists():
+        os.makedirs(tmp_path)
 
     with fitz.open(pdf_path) as doc:
         num_pages = len(doc) if limit is None else min(limit, len(doc))
@@ -47,18 +50,18 @@ def convert(
                 scale = 1.0 if height_px is None else height_px / rect.height
                 matrix = fitz.Matrix(scale, scale)
                 pix = page.get_pixmap(matrix=matrix)
-                pix.save(output_path / f"{page_num + 1:03d}.jpg")
+                pix.save(f"{tmp_path}/{page_num + 1:03d}.jpg")
                 progress.advance(task)
 
     # ZIP に圧縮
-    zip_path = Path(pdf_path).stem + ".zip"
+    zip_path = pdf_path.with_suffix(".zip")
     with Progress(
         TextColumn("[progress.description]{task.description}"),
         BarColumn(),
         TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
         TextColumn("[cyan]{task.completed}/{task.total}"),
     ) as progress:
-        files = sorted(output_path.glob("*.jpg"))
+        files = sorted(tmp_path.glob("*.jpg"))
         task = progress.add_task("Creating CBZ...", total=len(files))
         with ZipFile(zip_path, "w") as zipf:
             for file in files:
@@ -66,8 +69,13 @@ def convert(
                 progress.advance(task)
 
     # CBZ にリネーム
-    cbz_path = Path(pdf_path).stem + ".cbz"
+    cbz_path = pdf_path.with_suffix(".cbz")
     os.rename(zip_path, cbz_path)
+
+    # 一時ディレクトリを削除
+    for file in tmp_path.glob("*"):
+        os.remove(file)
+    os.rmdir(tmp_path)
 
     typer.echo(f"✓ Completed: {cbz_path}")
 
