@@ -19,3 +19,13 @@ tasks:
       - uv run ruff format --force-exclude --check {{.SRC_DIR}} {{.TEST_DIR}}
       - uv run mypy --strict --ignore-missing-imports {{.SRC_DIR}} {{.TEST_DIR}}
     silent: false
+  clean:
+    desc: "Clean up build artifacts"
+    cmds:
+      - rm -rf ./dist
+      - rm .coverage || true
+      - find . -name '__pycache__' -type d -exec rm -r {} +
+      - find . -name '.pytest_cache' -type d -exec rm -r {} +
+      - find . -name '.mypy_cache' -type d -exec rm -r {} +
+      - find . -name '.ruff_cache' -type d -exec rm -r {} +
+    silent: true
